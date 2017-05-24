@@ -8,8 +8,10 @@ var ExifImage = require('exif').ExifImage;
 
 var bodyParser = require('body-parser');
 var multer  = require('multer');
- 
-app.use(express.static('public'));
+
+
+//app.use(directory('upload/gang')); 
+app.use(express.static('upload/gang'));
 app.use(bodyParser({
           keepExtensions:true,
           limit:10000000,
@@ -63,11 +65,12 @@ app.post('/index.html', function (req, res) {
     });
 
    var des_file = __dirname +  "/" + path_str + "/" + req.files[0].originalname;
+   var resize_file = __dirname +  "/upload/resize/" + req.files[0].originalname;
    console.log("dest_file" + des_file);
    console.log("receive file " +  req.files[0].originalname);
    console.log("receive file path " + req.files[0].path);
    fs.readFile( req.files[0].path, function (err, data) {
-        console.log("dest_file " + des_file);
+        console.log("dest_file after write  " + des_file);
         fs.writeFile(des_file, data, function (err) {
          if( err ){
               console.log( err );
@@ -79,6 +82,14 @@ app.post('/index.html', function (req, res) {
                   res.send(features);
                   // { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
               });
+              im.resize({
+                srcData: fs.readFileSync(des_file, 'binary'),
+                width:   256
+                }, function(err, stdout, stderr){
+                    if (err) throw err
+                    fs.writeFileSync(resize_file, stdout, 'binary');
+                    console.log(resize_file + ' to fit within 256x256px');
+                });
        
     /*
     new ExifImage({ image : des_file }, function (error, exifData) {
