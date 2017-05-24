@@ -16,8 +16,8 @@ app.use(bodyParser({
           defer:true           }));
 app.use(multer({ dest: config_file.TEMPFILESAVEPLACE}).array('image'));
  
-app.get('/', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.htm" );
+app.get('/index.html', function (req, res) {
+   res.sendFile( __dirname + "/" + "index.html" );
 })
 
 app.post('/getfiles', function (req, res) {
@@ -43,7 +43,7 @@ app.post('/getfiles', function (req, res) {
 });
 
 
-app.post('/file_upload', function (req, res) {
+app.post('/index.html', function (req, res) {
  
    console.log(req.files[0]);  // 上传的文件信息
    var path_str = config_file.FILESAVEPLACE  + "/" + "gang";
@@ -73,9 +73,10 @@ app.post('/file_upload', function (req, res) {
               console.log( err );
          }else{
            
-              im.identify("upload/gang/20170514_175326.jpg", function(err, features){
+              im.identify(des_file, function(err, features){
                  if (err) throw err
                   console.log(features);
+                  res.send(features);
                   // { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
               });
        
@@ -87,7 +88,7 @@ app.post('/file_upload', function (req, res) {
             console.log(exifData); // Do something with your data!
     });
     */
-              
+              /*
               im.readMetadata(des_file, function(im_err, metadata){
                  if (!im_err){
                      console.log('Shot at '+ metadata.exif.xResolution);
@@ -98,10 +99,11 @@ app.post('/file_upload', function (req, res) {
                    message:'File uploaded successfully', 
                    filename:req.files[0].originalname
               };
+              */
           }
           //console.log( response );
           //res.end( JSON.stringify( response ) );
-          res.sendFile( __dirname + "/" + "index.htm" );
+          //res.sendFile( __dirname + "/" + "index.htm" );
        });
    });
 })

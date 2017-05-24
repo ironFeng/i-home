@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>文件上传表单</title>
+<script type="text/javascript">        
+         function uploadFile(){
+             var formData=new FormData();
+             var files=document.getElementById("file").files;
+             var file=files[0];
+             formData.append("image",file);
+             var xhr=new XMLHttpRequest();
+             xhr.open("post","index.html",true);
+             xhr.onload= function (e) {
+                 if(this.status==200)
+                     document.getElementById("result").innerHTML=this.response;
+             };
+             xhr.send(formData);
+         }
+     </script>
+</head>
+<body>
+<h3>文件上传：</h3>
+选择一个文件上传: <br />
+<form id ="form1" enctype="multipart/form-data">
+请选择文件<input type="file" id="file" name="image" size="50" />
+<br />
+<input type="button" value="上传文件" onclick="uploadFile();"/>
+</form>
+<output id="result" ></output>
+</body>
+</html>
